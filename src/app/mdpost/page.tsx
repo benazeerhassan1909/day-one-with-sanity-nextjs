@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { defineQuery } from "next-sanity";
 import { sanityFetch } from "@/sanity/live";
 import LoadMorePosts from "../components/LoadMorePosts"; // Import client component
