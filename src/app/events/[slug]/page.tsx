@@ -18,12 +18,6 @@ const EVENT_QUERY = defineQuery(`*[
   venue->
 }`);
 
-const { projectId, dataset } = client.config();
-const urlFor = (source: SanityImageSource) =>
-    projectId && dataset
-        ? imageUrlBuilder({ projectId, dataset }).image(source)
-        : null;
-
 export default async function EventPage({
     params,
 }: {
@@ -47,9 +41,7 @@ export default async function EventPage({
         venue,
         tickets,
     } = event;
-    const eventImageUrl = image
-        ? urlFor(image)?.width(550).height(310).url()
-        : null;
+   
     const eventDate = new Date(date).toDateString();
     const eventTime = new Date(date).toLocaleTimeString();
     const doorsOpenTime = new Date(
@@ -62,13 +54,6 @@ export default async function EventPage({
                 <Link href="/">← Back to events</Link>
             </div>
             <div className="grid items-top gap-12 sm:grid-cols-2">
-                <Image
-                    src={eventImageUrl || "https://placehold.co/550x310/png"}
-                    alt={name || "Event"}
-                    className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center sm:w-full"
-                    height="310"
-                    width="550"
-                />
                 <div className="flex flex-col justify-center space-y-4">
                     <div className="space-y-4">
                         {format ? (
