@@ -1,9 +1,5 @@
-import { client } from "@/sanity/client";
 import { sanityFetch } from "@/sanity/live";
-import imageUrlBuilder from "@sanity/image-url";
-import { SanityImageSource } from "@sanity/image-url/lib/types/types";
-import { defineQuery, PortableText } from "next-sanity";
-import Image from "next/image";
+import { defineQuery } from "next-sanity";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -14,6 +10,7 @@ const EVENT_QUERY = defineQuery(`*[
   ...,
   "date": coalesce(date, now()),
   "doorsOpen": coalesce(doorsOpen, 0),
+  "format": coalesce(format, "in-person"),
   headline->,
   venue->
 }`);
@@ -33,13 +30,9 @@ export default async function EventPage({
     const {
         name,
         date,
-        headline,
-        image,
-        details,
         format,
         doorsOpen,
         venue,
-        tickets,
     } = event;
    
     const eventDate = new Date(date).toDateString();
@@ -65,12 +58,6 @@ export default async function EventPage({
                             <h1 className="text-4xl font-bold tracking-tighter mb-8">
                                 {name}
                             </h1>
-                        ) : null}
-                        {headline?.name ? (
-                            <dl className="grid grid-cols-2 gap-1 text-sm font-medium sm:gap-2 lg:text-base">
-                                <dd className="font-semibold">Artist</dd>
-                                <dt>{headline?.name}</dt>
-                            </dl>
                         ) : null}
                         <dl className="grid grid-cols-2 gap-1 text-sm font-medium sm:gap-2 lg:text-base">
                             <dd className="font-semibold">Date</dd>
@@ -99,19 +86,6 @@ export default async function EventPage({
                             </dl>
                         ) : null}
                     </div>
-                    {details && details.length > 0 && (
-                        <div className="prose max-w-none">
-                            <PortableText value={details} />
-                        </div>
-                    )}
-                    {tickets && (
-                        <a
-                            className="flex items-center justify-center rounded-md bg-blue-500 p-4 text-white"
-                            href={tickets}
-                        >
-                            Buy Tickets
-                        </a>
-                    )}
                 </div>
             </div>
         </main>
