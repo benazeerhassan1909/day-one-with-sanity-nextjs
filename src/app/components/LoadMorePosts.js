@@ -39,7 +39,7 @@ export default function LoadMorePosts({ initialPosts }) {
                         <div className="flex flex-col gap-4 bg-black p-4 rounded-t-lg">
                             <Link
                                 className="hover:underline text-white flex flex-col gap-12"
-                                href={`/events/${mdpost?.slug?.current}`}
+                                href={`/mdpost/${mdpost?.slug?.current}`}
                             >
                                 <h2 className="text-xl font-semibold">{mdpost?.name}</h2>
                                 {mdpost?.postType && Array.isArray(mdpost.postType) ? (
