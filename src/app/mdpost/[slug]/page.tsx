@@ -4,7 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { urlFor } from "@/sanity/client";
-import { PortableText } from '@portabletext/react';
+import { PortableText, PortableTextComponentProps } from '@portabletext/react';
 
 
 const MDPOST_QUERY = defineQuery(`*[
@@ -53,13 +53,13 @@ export default async function PostPage({
             )
         },
         list: {
-            bullet: ({ children }: { children: React.ReactNode }) => <ul style={{ paddingLeft: '20px', listStyle: 'disc' }}>{children}</ul>,
-            number: ({ children }: { children: React.ReactNode }) => <ol style={{ paddingLeft: '20px', listStyle: 'decimal' }}>{children}</ol>,
+            bullet: ({ children }: PortableTextComponentProps<unknown>) => <ul style={{ paddingLeft: '20px', listStyle: 'disc' }}>{children}</ul>,
+            number: ({ children }: PortableTextComponentProps<unknown>) => <ol style={{ paddingLeft: '20px', listStyle: 'decimal' }}>{children}</ol>,
         },
         block: {
-            normal: ({ children }: { children: React.ReactNode }) => <p style={{ fontSize: '18px', lineHeight: '1.6' }}>{children}</p>,
-            h2: ({ children }: { children: React.ReactNode }) => <h2 style={{ fontSize: '24px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h2>,
-            h3: ({ children }: { children: React.ReactNode }) => <h3 style={{ fontSize: '20px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h3>,
+            normal: ({ children }: PortableTextComponentProps<unknown>) => <p style={{ fontSize: '18px', lineHeight: '1.6' }}>{children}</p>,
+            h2: ({ children }: PortableTextComponentProps<unknown>) => <h2 style={{ fontSize: '24px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h2>,
+            h3: ({ children }: PortableTextComponentProps<unknown>) => <h3 style={{ fontSize: '20px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h3>,
         },
     };
 
@@ -99,9 +99,12 @@ export default async function PostPage({
                             </p>
                         ) : null}
                         {mainImage && (
-                            <img
+                            <Image
                                 src={urlFor(mainImage).width(800).url() || ''}
                                 alt={mainImage.alt || 'Post Image'}
+                                width={800}
+                                height={800}
+                                priority
                             />
                         )}
                         <PortableText value={content} components={components} />
