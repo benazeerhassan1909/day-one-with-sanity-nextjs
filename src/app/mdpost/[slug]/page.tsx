@@ -45,7 +45,7 @@ export default async function PostPage({
         types: {
             image: ({ value }: { value: { asset: { _ref: string }; alt?: string } }) => (
                 <Image
-                    src={urlFor({ asset: { _ref: value.asset._ref } }).width(800).url() || ''}
+                    src={urlFor({ asset: { _ref: value.asset._ref, _type: "reference" } }).width(800).url() || ''}
                     alt={value.alt || 'Post Image'}
                     width={800}
                     height={800}
