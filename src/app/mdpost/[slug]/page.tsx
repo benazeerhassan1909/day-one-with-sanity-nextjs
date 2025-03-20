@@ -17,6 +17,7 @@ const MDPOST_QUERY = defineQuery(`*[
     "postType": coalesce(postType, "blog"),
     "mainImage": mainImage.asset->url,
     "categories": categories[]->title,
+    
 }`);
 
 export default async function PostPage({
@@ -43,14 +44,12 @@ export default async function PostPage({
     const components = {
         types: {
             image: ({ value }: { value: { asset: { _ref: string }; alt?: string } }) => (
-                    <Image
-                        src={urlFor(value.asset._ref).width(800).url() || ''}
-                        alt={value.alt || 'Image'}
-                        width={800}
-                        height={500}
-                        style={{ borderRadius: '10px' }}
-                        priority
-                    />
+                <Image
+                    src={urlFor({ asset: { _ref: value.asset._ref } }).width(800).url() || ''}
+                    alt={value.alt || 'Post Image'}
+                    width={800}
+                    height={800}
+                />
             )
         },
         list: {
