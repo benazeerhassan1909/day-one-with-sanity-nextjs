@@ -53,13 +53,13 @@ export default async function PostPage({
             )
         },
         list: {
-            bullet: ({ children }) => <ul style={{ paddingLeft: '20px', listStyle: 'disc' }}>{children}</ul>,
-            number: ({ children }) => <ol style={{ paddingLeft: '20px', listStyle: 'decimal' }}>{children}</ol>,
+            bullet: ({ children }: { children: React.ReactNode }) => <ul style={{ paddingLeft: '20px', listStyle: 'disc' }}>{children}</ul>,
+            number: ({ children }: { children: React.ReactNode }) => <ol style={{ paddingLeft: '20px', listStyle: 'decimal' }}>{children}</ol>,
         },
         block: {
-            normal: ({ children }) => <p style={{ fontSize: '18px', lineHeight: '1.6' }}>{children}</p>,
-            h2: ({ children }) => <h2 style={{ fontSize: '24px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h2>,
-            h3: ({ children }) => <h3 style={{ fontSize: '20px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h3>,
+            normal: ({ children }: { children: React.ReactNode }) => <p style={{ fontSize: '18px', lineHeight: '1.6' }}>{children}</p>,
+            h2: ({ children }: { children: React.ReactNode }) => <h2 style={{ fontSize: '24px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h2>,
+            h3: ({ children }: { children: React.ReactNode }) => <h3 style={{ fontSize: '20px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h3>,
         },
     };
 
