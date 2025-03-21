@@ -15,7 +15,7 @@ const MDPOST_QUERY = defineQuery(`*[
   "date": coalesce(date, now()),
     "createdBy": coalesce(createdBy, "Anonymous"),
     "postType": coalesce(postType, "blog"),
-    "mainImage": mainImage.asset->url,
+    "mainImage": mainImage,
     "categories": categories[]->title,
     
 }`);
@@ -40,15 +40,24 @@ export default async function PostPage({
         mainImage,
         content,
         categories,
+    }: {
+        name?: string;
+        date?: string;
+        createdBy?: string;
+        postType?: string | string[];
+        mainImage?: { asset?: { _ref: string }; url?: string; alt?: string; width?: number; height?: number };
+        content?: [];
+        categories?: string | string[];
+        
     } = post;
     const components = {
         types: {
-            image: ({ value }: { value: { asset: { _ref: string }; alt?: string } }) => (
+            image: ({ value }: { value: { asset: { _ref: string }; alt?: string; width?: number; height?: number } }) => (
                 <Image
-                    src={urlFor({ asset: { _ref: value.asset._ref, _type: "reference" } }).width(800).url() || ''}
+                    src={value.asset?._ref ? urlFor({ asset: { _ref: value.asset._ref, _type: "reference" } }).url() : ''}
                     alt={value.alt || 'Post Image'}
-                    width={800}
-                    height={800}
+                    width={value.width ||800} 
+                    height={value.height || 600} 
                 />
             )
         },
@@ -57,7 +66,11 @@ export default async function PostPage({
             number: ({ children }: PortableTextComponentProps<unknown>) => <ol style={{ paddingLeft: '20px', listStyle: 'decimal' }}>{children}</ol>,
         },
         block: {
-            normal: ({ children }: PortableTextComponentProps<unknown>) => <p style={{ fontSize: '18px', lineHeight: '1.6' }}>{children}</p>,
+            normal: ({ children }: PortableTextComponentProps<unknown>) => {
+                return <p style={{ textAlign: 'center' }}>{children}</p>; // Default alignment set to 'center'
+            },
+            
+            // normal: ({ children }: PortableTextComponentProps<unknown>) => <p style={{ fontSize: '18px', lineHeight: '1.6' }}>{children}</p>,
             h2: ({ children }: PortableTextComponentProps<unknown>) => <h2 style={{ fontSize: '24px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h2>,
             h3: ({ children }: PortableTextComponentProps<unknown>) => <h3 style={{ fontSize: '20px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h3>,
         },
@@ -100,14 +113,14 @@ export default async function PostPage({
                         ) : null}
                         {mainImage && (
                             <Image
-                                src={urlFor(mainImage).width(800).url() || ''}
+                                src={mainImage?.asset?._ref ? urlFor({ asset: { _ref: mainImage.asset._ref, _type: "reference" } }).url() || '' : mainImage?.url || ''}
                                 alt={mainImage.alt || 'Post Image'}
-                                width={800}
-                                height={800}
-                                priority
+                                width={mainImage.width || 800}
+                                height={mainImage.height || 600}
+                                priority    
                             />
                         )}
-                        <PortableText value={content} components={components} />
+                        <PortableText value={content || []} components={components} />
 
                         {Array.isArray(categories) ? (
                             <p className="text-gray-500">

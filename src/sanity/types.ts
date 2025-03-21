@@ -310,7 +310,7 @@ export type EVENTS_QUERYResult = Array<{
 
 // Source: ../day-one-with-sanity-nextjs/src/app/mdpost/[slug]/page.tsx
 // Variable: MDPOST_QUERY
-// Query: *[    _type == "mdpost" &&    slug.current == $slug  ][0]{  ...,  "date": coalesce(date, now()),    "createdBy": coalesce(createdBy, "Anonymous"),    "postType": coalesce(postType, "blog"),    "mainImage": mainImage.asset->url,    "categories": categories[]->title,}
+// Query: *[    _type == "mdpost" &&    slug.current == $slug  ][0]{  ...,  "date": coalesce(date, now()),    "createdBy": coalesce(createdBy, "Anonymous"),    "postType": coalesce(postType, "blog"),    "mainImage": mainImage,    "categories": categories[]->title,    }
 export type MDPOST_QUERYResult = null;
 
 // Query TypeMap
@@ -319,6 +319,6 @@ declare module "@sanity/client" {
   interface SanityQueries {
     "*[\n    _type == \"event\" &&\n    slug.current == $slug\n  ][0]{\n  ...,\n  \"date\": coalesce(date, now()),\n  \"doorsOpen\": coalesce(doorsOpen, 0),\n  \"format\": coalesce(format, \"in-person\"),\n  headline->,\n  venue->\n}": EVENT_QUERYResult;
     "*[\n  _type == \"event\"\n  && defined(slug.current)\n]{_id, name, slug, date}|order(date desc)": EVENTS_QUERYResult;
-    "*[\n    _type == \"mdpost\" &&\n    slug.current == $slug\n  ][0]{\n  ...,\n  \"date\": coalesce(date, now()),\n    \"createdBy\": coalesce(createdBy, \"Anonymous\"),\n    \"postType\": coalesce(postType, \"blog\"),\n    \"mainImage\": mainImage.asset->url,\n    \"categories\": categories[]->title,\n}": MDPOST_QUERYResult;
+    "*[\n    _type == \"mdpost\" &&\n    slug.current == $slug\n  ][0]{\n  ...,\n  \"date\": coalesce(date, now()),\n    \"createdBy\": coalesce(createdBy, \"Anonymous\"),\n    \"postType\": coalesce(postType, \"blog\"),\n    \"mainImage\": mainImage,\n    \"categories\": categories[]->title,\n    \n}": MDPOST_QUERYResult;
   }
 }

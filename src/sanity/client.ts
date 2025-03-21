@@ -7,6 +7,9 @@ export const client = createClient({
     dataset: "production",
     apiVersion: "2024-11-01",
     useCdn: false,
+    stega: {
+        studioUrl: 'http://localhost:3333/studio/',
+    },
 });
 const builder = imageUrlBuilder(client);
 

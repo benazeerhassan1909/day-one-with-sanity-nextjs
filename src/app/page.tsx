@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { defineQuery } from "next-sanity";
 import { sanityFetch } from "@/sanity/live";
+import { notFound } from 'next/navigation';
+
 
 const EVENTS_QUERY = defineQuery(`*[
   _type == "event"
@@ -9,7 +11,9 @@ const EVENTS_QUERY = defineQuery(`*[
 
 export default async function IndexPage() {
   const { data: events } = await sanityFetch({ query: EVENTS_QUERY });
-
+  if (!events) {
+    notFound();
+  }
   return (
     <main className="flex bg-gray-100 min-h-screen flex-col p-24 gap-12">
       <h1 className="text-4xl font-bold tracking-tighter">Events</h1>
