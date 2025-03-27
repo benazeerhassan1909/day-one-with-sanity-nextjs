@@ -44,7 +44,7 @@ export default async function RootLayout({
             <VisualEditing />
           </>
         )}
-        {/* <Footer /> */}
+        <Footer />
 
       </body>
     </html>
