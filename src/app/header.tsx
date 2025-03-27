@@ -22,10 +22,8 @@ export default async function Header() {
     const { siteTitle, logo, header }: {
         siteTitle?: string;
         logo?: { asset?: { _ref: string }; url?: string; alt?: string; width?: number; height?: number };
-        header?: { menuItems?: { title: string; subMenu?: { title: string; link: string }[] }[] };
+        header?: { menuItems?: { title: string; url: string; subMenu?: { title: string; link: string }[] }[] };
     } = siteSettings;
-
-    console.log(header);
     return (
         <header className="bg-gray-100 p-8">
             <div className="flex items-center justify-between">
@@ -43,10 +41,10 @@ export default async function Header() {
                 </div>
                 <nav>
                     <ul className="flex space-x-4">
-                        {header?.menuItems?.map((menuItem: { title: string; subMenu?: { title: string; link: string }[] }) => (
+                        {header?.menuItems?.map((menuItem: { title: string; url: string; subMenu?: { title: string; link: string }[] }) => (
                             <li key={menuItem.title} className="relative group">
-                                <Link href={`/${menuItem.title.toLowerCase()}`}>
-                                    {menuItem.title}
+                                <Link href={`/${menuItem.url?.toLowerCase()}`}>
+                                    {menuItem.title} 
                                 </Link>
                                 {menuItem.subMenu && menuItem.subMenu.length > 0 && (
                                     <ul className="absolute left-0 mt-2 bg-white border border-gray-200 shadow-lg hidden group-hover:block">

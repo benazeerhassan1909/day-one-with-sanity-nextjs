@@ -17,7 +17,6 @@ export default async function Footer() {
         siteTitle?: string;
         footer?: { socialLinks?: { url: string; name: string }[] };
     } = siteSettingsFooter;
-    console.log(siteSettingsFooter);
     return (
         <footer className="bg-gray-100 p-8 ">
             <div className="flex items-center justify-between">

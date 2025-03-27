@@ -1,10 +1,11 @@
-import { sanityFetch , } from "@/sanity/live";
+import { sanityFetch, } from "@/sanity/live";
 import { defineQuery } from "next-sanity";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { urlFor } from "@/sanity/client";
 import { PortableText, PortableTextComponentProps } from '@portabletext/react';
+import { TextAlign } from "../../components/TextAlignComponent";
 
 
 const MDPOST_QUERY = defineQuery(`*[
@@ -17,6 +18,7 @@ const MDPOST_QUERY = defineQuery(`*[
     "postType": coalesce(postType, "blog"),
     "mainImage": mainImage,
     "categories": categories[]->title,
+    "description": description,
     
 }`);
 
@@ -40,6 +42,7 @@ export default async function PostPage({
         mainImage,
         content,
         categories,
+        description,
     }: {
         name?: string;
         date?: string;
@@ -48,7 +51,8 @@ export default async function PostPage({
         mainImage?: { asset?: { _ref: string }; url?: string; alt?: string; width?: number; height?: number };
         content?: [];
         categories?: string | string[];
-        
+        description?: string;
+
     } = post;
     const components = {
         types: {
@@ -56,8 +60,8 @@ export default async function PostPage({
                 <Image
                     src={value.asset?._ref ? urlFor({ asset: { _ref: value.asset._ref, _type: "reference" } }).url() : ''}
                     alt={value.alt || 'Post Image'}
-                    width={value.width ||800} 
-                    height={value.height || 600} 
+                    width={value.width || 800}
+                    height={value.height || 600}
                 />
             )
         },
@@ -66,15 +70,38 @@ export default async function PostPage({
             number: ({ children }: PortableTextComponentProps<unknown>) => <ol style={{ paddingLeft: '20px', listStyle: 'decimal' }}>{children}</ol>,
         },
         block: {
-            normal: ({ children }: PortableTextComponentProps<unknown>) => {
-                return <p style={{ textAlign: 'center' }}>{children}</p>; // Default alignment set to 'center'
-            },
-            
-            // normal: ({ children }: PortableTextComponentProps<unknown>) => <p style={{ fontSize: '18px', lineHeight: '1.6' }}>{children}</p>,
+            // get alignment mark from the block
+            normal: ({ children }: PortableTextComponentProps<unknown>) => <p style={{ margin: '10px 0' }}>{children}</p>,
+            h1: ({ children }: PortableTextComponentProps<unknown>) => <h1 style={{ fontSize: '32px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h1>,
             h2: ({ children }: PortableTextComponentProps<unknown>) => <h2 style={{ fontSize: '24px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h2>,
             h3: ({ children }: PortableTextComponentProps<unknown>) => <h3 style={{ fontSize: '20px', fontWeight: 'bold', margin: '10px 0' }}>{children}</h3>,
         },
+        marks: {
+
+            left: ({ children }: PortableTextComponentProps<unknown>) => <TextAlign value="left">{children}</TextAlign>,
+            center: ({ children }: PortableTextComponentProps<unknown>) => <TextAlign value="center">{children}</TextAlign>,
+            right: ({ children }: PortableTextComponentProps<unknown>) => <TextAlign value="right">{children}</TextAlign>,
+
+            textColor: ({ children, value }: { children: React.ReactNode; value: { color?: string } }) => {
+                return <span style={{ color: value?.color || "inherit" }}>{children}</span>;
+            },
+            backgroundColor: ({ children, value }: { children: React.ReactNode; value: { bgcolor?: string } }) => {
+                return (
+                    <span
+                        style={{
+                            backgroundColor: value?.bgcolor ? value.bgcolor : "transparent",
+                            padding: "2px 4px",
+                            display: "inline-block",
+                        }}
+                    >
+                        {children}
+                    </span>
+                );
+            },
+
+        },
     };
+
 
     return (
         <main className="container mx-auto grid gap-12 p-12">
@@ -84,7 +111,7 @@ export default async function PostPage({
             <div className="grid items-top gap-12 sm:grid-cols-2">
                 <div className="flex flex-col justify-center space-y-4">
                     <div className="space-y-4">
-                    
+
                         {name ? (
                             <h1 className="text-4xl font-bold tracking-tighter mb-8">
                                 {name}
@@ -117,10 +144,16 @@ export default async function PostPage({
                                 alt={mainImage.alt || 'Post Image'}
                                 width={mainImage.width || 800}
                                 height={mainImage.height || 600}
-                                priority    
+                                priority
                             />
                         )}
-                        <PortableText value={content || []} components={components} />
+                        {Array.isArray(content) ? (
+                            <PortableText value={content || []} components={components} />
+                        ) : null}
+
+                        {Array.isArray(description) ? (
+                            <PortableText value={description} components={components} />
+                        ) : null}
 
                         {Array.isArray(categories) ? (
                             <p className="text-gray-500">
@@ -130,10 +163,10 @@ export default async function PostPage({
                             <p className="text-gray-500">
                                 {categories}
                             </p>
-                        ) : null}   
-                        
+                        ) : null}
 
-                       
+
+
                     </div>
                 </div>
             </div>

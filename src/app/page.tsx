@@ -1,39 +1,13 @@
-import Link from "next/link";
-import { defineQuery } from "next-sanity";
-import { sanityFetch } from "@/sanity/live";
-import { notFound } from 'next/navigation';
+import { PageBuilder } from "@/app/components/PageBuilder";
+import { sanityFetch } from "@/sanity/lib/live";
+import { HOME_PAGE_QUERY } from "@/sanity/lib/queries";
 
-
-const EVENTS_QUERY = defineQuery(`*[
-  _type == "event"
-  && defined(slug.current)
-]{_id, name, slug, date}|order(date desc)`);
-
-export default async function IndexPage() {
-  const { data: events } = await sanityFetch({ query: EVENTS_QUERY });
-  if (!events) {
-    notFound();
-  }
-  return (
-    <main className="flex bg-gray-100 min-h-screen flex-col p-24 gap-12">
-      <h1 className="text-4xl font-bold tracking-tighter">Events</h1>
-      <ul className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-        {events.map((event) => (
-          <li className="bg-white p-4 rounded-lg" key={event._id}>
-            <Link
-              className="hover:underline"
-              href={`/events/${event?.slug?.current}`}
-            >
-              <h2 className="text-xl font-semibold">{event?.name}</h2>
-              {event?.date && (
-                <p className="text-gray-500">
-                  {new Date(event.date).toLocaleDateString()}
-                </p>
-              )}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    </main>
-  );
+export default async function Page() {
+  const { data: page } = await sanityFetch({
+    query: HOME_PAGE_QUERY,
+  });
+  return page?.homePage?.content ? (
+    <PageBuilder documentId={page?.homePage._id}
+      documentType={page?.homePage._type}  content={page?.homePage.content} />
+  ) : null;
 }
